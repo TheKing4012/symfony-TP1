@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% if n is defined and r is defined %}
+        {% if p is defined %}
+            {# Affichage pour le calcul des combinaisons #}
+            <div>
+                <h2>Combinaisons</h2>
+                <p>Combinaison({{ n }}, {{ p }}) = {{ r }}</p>
+            </div>
+        {% else %}
+            {# Affichage pour le calcul de la factorielle #}
+            <div>
+                <h2>Factorielle</h2>
+                <p>Factorielle({{ n }}) = {{ r }}</p>
+            </div>
+        {% endif %}
+    {% else %}
+        {# Affichage par défaut si les paramètres ne sont pas définis correctement #}
+        <div>
+            <p>Paramètres non valides.</p>
+        </div>
+    {% endif %}
+{% endblock %}

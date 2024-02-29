@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Titre par défaut{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+    <div>
+        <h2>Calcul de la factorielle</h2>
+        <form action="/" method="GET">
+            <label for="factorielle">Entier n :</label>
+            {# PERMET DE GARDER LA VALEUR QUI A PRECEDEMMENT ETE ENVOYEE VIA UNE REQUETE GET #}
+            <input type="number" id="factorielle" name="factorielle" value="{{ app.request.query.get('factorielle', '') }}" required>
+            <button type="submit">Calculer</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Calcul des combinaisons</h2>
+        <form action="/" method="GET">
+            <label for="n">Entier n :</label>
+            {# PERMET DE GARDER LA VALEUR QUI A PRECEDEMMENT ETE ENVOYEE VIA UNE REQUETE GET #}
+            <input type="number" id="n" name="n" value="{{ app.request.query.get('n', '') }}" required>
+            <label for="p">Entier p :</label>*
+            {# PERMET DE GARDER LA VALEUR QUI A PRECEDEMMENT ETE ENVOYEE VIA UNE REQUETE GET #}
+            <input type="number" id="p" name="p" value="{{ app.request.query.get('p', '') }}" required>
+            <button type="submit">Calculer</button>
+        </form>
+    </div>
+
+    <div>
+        <div>
+            <h2>Résultat :</h2>
+            {% block resultat %}
+                {% if result is defined %}
+                    <p>{{ result }}</p>
+                {% endif %}
+            {% endblock %}
+        </div>
+
+    </div>
+{% endblock %}
+
+</body>
+</html>
