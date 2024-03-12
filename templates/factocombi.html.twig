@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Resultat{% endblock %}</title>
+</head>
+<body
     {% if n is defined and r is defined %}
         {% if p is defined %}
             {# Affichage pour le calcul des combinaisons #}

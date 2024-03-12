@@ -1,5 +1,18 @@
+# routes.yaml
+
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+# Ajouter la route pour le favicon
+favicon:
+    path: /favicon.ico
+    controller: App\Controller\FaviconController::index
+    methods: GET
+
+app_mastermind:
+    path: /master
+    controller: App\Controller\MastermindController::play
+    methods: [GET, POST]

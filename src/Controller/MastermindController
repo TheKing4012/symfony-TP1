@@ -1,0 +1,114 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+use App\iMastermind;
+
+class MastermindController extends AbstractController
+{
+    #[Route('/master', name: 'app_mastermind')]
+    public function play(Request $request, SessionInterface $session): Response
+    {
+        // Récupérer ou créer une instance de Mastermind
+        $mastermind = $session->has('mastermind') ? unserialize($session->get('mastermind')) : new Mastermind();
+
+        // Effectuer les opérations nécessaires avec votre instance de Mastermind
+        // Par exemple, appeler la méthode test() pour tester une proposition
+
+        // Stocker l'instance de Mastermind dans la session
+        $session->set('mastermind', serialize($mastermind));
+
+        // Vérifier si une session existe
+        if (!$session->isStarted()) {
+            // Démarrer une nouvelle session si elle n'existe pas
+            $session->start();
+        }
+
+        // Vérifier si le code secret est déjà sauvegardé dans la session
+        if (!$session->has('secret_code')) {
+            // Générer un nouveau code secret (exemple)
+            $secretCode = $this->generateSecretCode();
+
+            // Sauvegarder le code secret dans la session
+            $session->set('secret_code', $secretCode);
+        }
+
+        // Vérifier si les tentatives sont déjà sauvegardées dans la session
+        if (!$session->has('attempts')) {
+            // Initialiser le tableau des tentatives dans la session
+            $session->set('attempts', []);
+        }
+
+        // Vérifier si les tentatives sont déjà sauvegardées dans la session
+        if (!$session->has('results')) {
+            // Initialiser le tableau des tentatives dans la session
+            $session->set('results', []);
+        }
+
+        // Vous pouvez accéder aux données de la session comme ceci
+        $secretCode = $session->get('secret_code');
+        $attempts = $session->get('attempts');
+        $results = $session->get('results');
+
+        // Faites quelque chose avec les données récupérées
+        $code= $request->request->get('code');
+        $wellPlaced = 0;
+        $wrongPlace = 0;
+
+        if (is_numeric($code)) {
+            if ($code !== null) {
+                if (substr($code, 0, 1) != substr($secretCode, 0, 1)) {
+                    $wrongPlace++;
+                } else {
+                    $wellPlaced++;
+                }
+                if (substr($code, 1, 1) != substr($secretCode, 1, 1)) {
+                    $wrongPlace++;
+                } else {
+                    $wellPlaced++;
+                }
+                if (substr($code, 2, 1) != substr($secretCode, 2, 1)) {
+                    $wrongPlace++;
+                } else {
+                    $wellPlaced++;
+                }
+                if (substr($code, 3, 1) != substr($secretCode, 3, 1)) {
+                    $wrongPlace++;
+                } else {
+                    $wellPlaced++;
+                }
+                //$session->set('wrongPlace', $wrongPlace);
+                //+$session->set('wellPlaced', $wellPlaced);
+
+                $results[] = ["wrongPlace" => intval($wrongPlace), "wellPlaced" => intval($wellPlaced), "code" => $code];
+
+                // Stocker les résultats dans la session
+                $session->set('results', $results);
+
+                return $this->render('mastermind/play.html.twig', [
+                    'results' => $results
+                ]);
+            }
+        } else {
+            return $this->render('mastermind/play.html.twig', [
+                'results' => $results,
+                ''
+            ]);
+        }
+
+        return $this->render('mastermind/play.html.twig', [
+
+        ]);
+    }
+
+    private function generateSecretCode(): string
+    {
+        return "".rand(1000,9999);
+    }
+}

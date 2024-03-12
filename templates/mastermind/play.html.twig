@@ -1,0 +1,67 @@
+{# templates/mastermind/play.html.twig #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mastermind{% endblock %}</title>
+    <script>
+        function showErrorPopup() {
+            alert("Veuillez saisir un code valide (4 chiffres).");
+        }
+
+        function validateCode() {
+            var codeInput = document.getElementById("code").value;
+            if (isNaN(codeInput) || codeInput.length !== 4) {
+                showErrorPopup();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+
+{% block body %}
+<h1>Mastermind</h1>
+
+{# Afficher les messages d'erreur s'il y en a #}
+{% if app.flashes('error') is not empty %}
+    <div class="alert alert-danger">
+        {% for message in app.flashes('error') %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{# Afficher le formulaire de proposition de code #}
+<form action="{{ path('app_mastermind') }}" method="post" onsubmit="return validateCode()">
+    <label for="code">Proposer un code (4 chiffres) :</label>
+    <input type="text" id="code" name="code" maxlength="4" required>
+    <button type="submit">Proposer</button>
+</form>
+
+{# Afficher les résultats des propositions précédentes #}
+{% if results is defined and results is not empty %}
+    <h2>Résultats des propositions précédentes :</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Proposition</th>
+            <th>Bien placés</th>
+            <th>Mal placés</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ result.code }}</td>
+                <td>{{ result.wellPlaced }}</td>
+                <td>{{ result.wrongPlace }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
